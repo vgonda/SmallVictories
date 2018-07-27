@@ -31,13 +31,17 @@
 
 package com.raywenderlich.android.smallvictories
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
+import android.content.res.Resources
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
+import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,10 +50,16 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
     setSupportActionBar(toolbar)
 
-    fab.setOnClickListener { view ->
-      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-          .setAction("Action", null).show()
+    val viewModel = ViewModelProviders.of(this).get(VictoryViewModel::class.java)
+    viewModel.viewState.observe(this, Observer {
+      it?.let { render(it) }
+    })
+    viewModel.initialize(this)
+
+    fab.setOnClickListener {
+      viewModel.incrementVictoryCount()
     }
+    textVictoryTitle.setOnClickListener { showVictoryTitleDialog(viewModel) }
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -61,6 +71,29 @@ class MainActivity : AppCompatActivity() {
     return when (item.itemId) {
       R.id.action_settings -> true
       else -> super.onOptionsItemSelected(item)
+    }
+  }
+
+  private fun render(uiModel: VictoryUiModel) {
+    if (!uiModel.title.isBlank()) {
+      textVictoryTitle.text = uiModel.title
+    }
+  }
+
+  private fun showVictoryTitleDialog(viewModel: VictoryViewModel) {
+    AlertDialog.Builder(this).apply {
+      setTitle("Set Victory title")
+
+      val input = EditText(this@MainActivity)
+      input.setText(textVictoryTitle.text)
+      val density = Resources.getSystem().displayMetrics.density
+      val padding = Math.round(16 * density)
+      setView(input, padding, 0, padding, 0)
+      setPositiveButton("OK", { _, _ ->
+        viewModel.setVictoryTitle(input.text.toString())
+      })
+      setNegativeButton("Cancel", null)
+      create().show()
     }
   }
 }
