@@ -1,3 +1,14 @@
+package com.raywenderlich.android.smallvictories
+
+import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.arch.lifecycle.Observer
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+
 /*
  *
  * Copyright (c) 2018 Razeware LLC
@@ -28,21 +39,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.raywenderlich.android.smallvictories
 
-import org.junit.Test
+class VictoryViewModelTest {
 
-import org.junit.Assert.*
+  @get:Rule
+  @Suppress("unused")
+  var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
+  private val viewStateObserver: Observer<VictoryUiModel> = mock()
+  private val mockVictoryRepository: VictoryRepository = mock()
+  private val viewModel = VictoryViewModel()
+
+  @Before
+  fun setUpTaskDetailViewModel() {
+    viewModel.viewState.observeForever(viewStateObserver)
+    viewModel.repository = mockVictoryRepository
+  }
 
   @Test
-  fun addition_isCorrect() {
-    assertEquals(4, 2 + 2)
+  fun initializeReturnsViewModel() {
+    val title = "New title"
+    stubRepositoryGetVictoryTitle(title)
+    viewModel.initialize()
+
+    verify(viewStateObserver).onChanged(VictoryUiModel(title, 0))
+  }
+
+  @Test
+  fun setVictoryTitleSavesTitle() {
+    val title = "New title"
+    viewModel.setVictoryTitle(title)
+
+    verify(mockVictoryRepository).setVictoryTitle(title)
+  }
+  
+  @Test
+  fun setVictoryTitleReturnsTitle() {
+    val title = "New title"
+    viewModel.setVictoryTitle(title)
+
+    verify(viewStateObserver).onChanged(VictoryUiModel(title, 0))
+  }
+
+  private fun stubRepositoryGetVictoryTitle(title: String) {
+      whenever(mockVictoryRepository.getVictoryTitle())
+              .thenReturn(title)
   }
 }

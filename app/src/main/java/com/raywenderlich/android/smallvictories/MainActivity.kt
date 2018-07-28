@@ -31,6 +31,7 @@
 
 package com.raywenderlich.android.smallvictories
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.res.Resources
@@ -54,7 +55,8 @@ class MainActivity : AppCompatActivity() {
     viewModel.viewState.observe(this, Observer {
       it?.let { render(it) }
     })
-    viewModel.initialize(this)
+    viewModel.repository = Repository(this)
+    viewModel.initialize()
 
     fab.setOnClickListener {
       viewModel.incrementVictoryCount()
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  @SuppressLint("RestrictedApi")
   private fun showVictoryTitleDialog(viewModel: VictoryViewModel) {
     AlertDialog.Builder(this).apply {
       setTitle("Set Victory title")

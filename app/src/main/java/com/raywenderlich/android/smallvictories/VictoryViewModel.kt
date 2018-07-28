@@ -33,21 +33,19 @@ package com.raywenderlich.android.smallvictories
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.content.Context
 
 
 class VictoryViewModel : ViewModel() {
 
   val viewState: MutableLiveData<VictoryUiModel> = MutableLiveData()
-  private lateinit var repository: Repository
+  lateinit var repository: VictoryRepository
 
-  fun initialize(context: Context) {
-    this.repository = Repository(context)
-    viewState.postValue(VictoryUiModel(repository.victoryTitle, 0))
+  fun initialize() {
+    viewState.postValue(VictoryUiModel(repository.getVictoryTitle(), 0))
   }
 
   fun setVictoryTitle(title: String) {
-    repository.victoryTitle = title
+    repository.setVictoryTitle(title)
     viewState.postValue(VictoryUiModel(title, 0))
   }
 
@@ -56,21 +54,3 @@ class VictoryViewModel : ViewModel() {
   }
 }
 
-class Repository(context: Context) {
-  companion object {
-
-    const val PACKAGE_NAME = "com.raywenderlich.android.smallvictories"
-    const val KEY_VICTORY_TITLE = "victory_title"
-    const val KEY_VICTORY_COUNT = "victory_count"
-  }
-
-  private val sharedPreferences = context.getSharedPreferences(PACKAGE_NAME, Context.MODE_PRIVATE)
-
-  var victoryTitle: String
-    get() = sharedPreferences.getString(KEY_VICTORY_TITLE, "Victory title")
-    set(value) = sharedPreferences.edit().putString(KEY_VICTORY_TITLE, value).apply()
-
-  var victoryCount: Int
-    get() = sharedPreferences.getInt(KEY_VICTORY_COUNT, 0)
-    set(value) = sharedPreferences.edit().putInt(KEY_VICTORY_COUNT, value).apply()
-}
