@@ -30,26 +30,55 @@
  */
 package com.raywenderlich.android.smallvictories
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
 
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.*
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.filters.LargeTest
+import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
+import android.widget.EditText
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.instanceOf
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
-
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
+@LargeTest
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class MainActivityTest {
+
+  @Rule
+  @JvmField
+  var rule = ActivityTestRule(MainActivity::class.java)
 
   @Test
-  fun useAppContext() {
-    // Context of the app under test.
-    val appContext = InstrumentationRegistry.getTargetContext()
-    assertEquals("com.raywenderlich.android.smallvictories", appContext.packageName)
+  fun tappingOnTitleOpensEditDialog() {
+    onView(withId(R.id.textVictoryTitle))
+        .perform(click())
+
+    onView(withId(R.id.alertTitle))
+        .check(matches(isDisplayed()))
+
+    onView(withId(android.R.id.button2))
+        .perform(click())
+  }
+
+  @Test
+  fun editingDialogUpdatesTitle() {
+    onView(withId(R.id.textVictoryTitle))
+        .perform(click())
+
+    val newTitle = "Made the bed"
+    onView(instanceOf(EditText::class.java))
+        .perform(clearText())
+        .perform(typeText(newTitle))
+
+    onView(withText(R.string.dialog_ok))
+        .perform(click())
+
+    onView(allOf(withId(R.id.textVictoryTitle), withText(newTitle)))
+        .check(matches(isDisplayed()))
   }
 }

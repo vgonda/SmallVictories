@@ -85,17 +85,17 @@ class MainActivity : AppCompatActivity() {
   @SuppressLint("RestrictedApi")
   private fun showVictoryTitleDialog(viewModel: VictoryViewModel) {
     AlertDialog.Builder(this).apply {
-      setTitle("Set Victory title")
+      setTitle(getString(R.string.dialog_title))
 
       val input = EditText(this@MainActivity)
       input.setText(textVictoryTitle.text)
       val density = Resources.getSystem().displayMetrics.density
       val padding = Math.round(16 * density)
       setView(input, padding, 0, padding, 0)
-      setPositiveButton("OK", { _, _ ->
+      setPositiveButton(getString(R.string.dialog_ok), { _, _ ->
         viewModel.setVictoryTitle(input.text.toString())
       })
-      setNegativeButton("Cancel", null)
+      setNegativeButton(getString(R.string.dialog_cancel), null)
       create().show()
     }
   }
