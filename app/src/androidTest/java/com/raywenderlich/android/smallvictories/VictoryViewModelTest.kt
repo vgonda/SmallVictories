@@ -59,10 +59,12 @@ class VictoryViewModelTest {
   @Test
   fun initializeReturnsViewModel() {
     val title = "New title"
+    val count = 5
     stubVictoryRepositoryGetVictoryTitle(title)
+    stubVictoryRepositoryGetVictoryCount(count)
     viewModel.initialize()
 
-    verify(viewStateObserver).onChanged(VictoryUiModel(title, 0))
+    verify(viewStateObserver).onChanged(VictoryUiModel(title, count))
   }
 
   @Test
@@ -72,7 +74,7 @@ class VictoryViewModelTest {
 
     verify(mockVictoryRepository).setVictoryTitle(title)
   }
-  
+
   @Test
   fun setVictoryTitleReturnsTitle() {
     val title = "New title"
@@ -81,13 +83,43 @@ class VictoryViewModelTest {
     verify(viewStateObserver).onChanged(VictoryUiModel(title, 0))
   }
 
+  @Test
+  fun incrementVictoryCountCallsRepository() {
+    stubVictoryRepositoryGetVictoryCount(5)
+    stubVictoryRepositoryGetVictoryTitle("Title")
+    viewModel.incrementVictoryCount()
+
+    verify(mockVictoryRepository).getVictoryCount()
+  }
+
+  @Test
+  fun incrementVictoryCountUpdatesCount() {
+    val previousCount = 5
+    stubVictoryRepositoryGetVictoryCount(previousCount)
+    stubVictoryRepositoryGetVictoryTitle("Title")
+    viewModel.incrementVictoryCount()
+
+    verify(mockVictoryRepository).setVictoryCount(previousCount + 1)
+  }
+
+  @Test
+  fun incrementVictoryCountReturnsTitleUpdatedCount() {
+    val previousCount = 5
+    stubVictoryRepositoryGetVictoryCount(previousCount)
+    val title = "Title"
+    stubVictoryRepositoryGetVictoryTitle(title)
+    viewModel.incrementVictoryCount()
+
+    verify(viewStateObserver).onChanged(VictoryUiModel(title, previousCount + 1))
+  }
+
   private fun stubVictoryRepositoryGetVictoryTitle(title: String) {
-      whenever(mockVictoryRepository.getVictoryTitle())
-              .thenReturn(title)
+    whenever(mockVictoryRepository.getVictoryTitle())
+        .thenReturn(title)
   }
 
   private fun stubVictoryRepositoryGetVictoryCount(count: Int) {
-      whenever(mockVictoryRepository.getVictoryCount())
-              .thenReturn(count)
+    whenever(mockVictoryRepository.getVictoryCount())
+        .thenReturn(count)
   }
 }
