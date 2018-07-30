@@ -76,11 +76,13 @@ class VictoryViewModelTest {
   }
 
   @Test
-  fun setVictoryTitleReturnsTitle() {
+  fun setVictoryTitleReturnsTitleAndCount() {
+    val count = 4
+    stubVictoryRepositoryGetVictoryCount(count)
     val title = "New title"
     viewModel.setVictoryTitle(title)
 
-    verify(viewStateObserver).onChanged(VictoryUiModel(title, 0))
+    verify(viewStateObserver).onChanged(VictoryUiModel(title, count))
   }
 
   @Test

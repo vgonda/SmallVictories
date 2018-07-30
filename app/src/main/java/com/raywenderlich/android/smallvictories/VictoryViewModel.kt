@@ -46,7 +46,7 @@ class VictoryViewModel : ViewModel() {
 
   fun setVictoryTitle(title: String) {
     repository.setVictoryTitle(title)
-    viewState.postValue(VictoryUiModel(title, 0))
+    viewState.postValue(VictoryUiModel(title, repository.getVictoryCount()))
   }
 
   fun incrementVictoryCount() {
