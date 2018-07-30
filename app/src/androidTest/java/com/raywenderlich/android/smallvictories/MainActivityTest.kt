@@ -39,6 +39,7 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.widget.EditText
+import android.widget.TextView
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.Rule
@@ -79,6 +80,18 @@ class MainActivityTest {
         .perform(click())
 
     onView(allOf(withId(R.id.textVictoryTitle), withText(newTitle)))
+        .check(matches(isDisplayed()))
+  }
+
+  @Test
+  fun incrementingVictoryCountUpdatesCountView() {
+    val previousCountString = rule.activity.findViewById<TextView>(R.id.textVictoryCount).text.toString()
+    val previousCount = if (previousCountString.isBlank()) 0 else previousCountString.toInt()
+
+    onView(withId(R.id.fab))
+        .perform(click())
+
+    onView(allOf(withId(R.id.textVictoryCount), withText((previousCount + 1).toString())))
         .check(matches(isDisplayed()))
   }
 }

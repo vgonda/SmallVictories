@@ -80,6 +80,8 @@ class MainActivity : AppCompatActivity() {
     if (!uiModel.title.isBlank()) {
       textVictoryTitle.text = uiModel.title
     }
+
+    textVictoryCount.text = uiModel.count.toString()
   }
 
   @SuppressLint("RestrictedApi")
