@@ -2,7 +2,9 @@ package com.raywenderlich.android.smallvictories
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -68,13 +70,6 @@ class VictoryViewModelTest {
     viewModel.setVictoryTitle(title)
 
     verify(viewStateObserver).onChanged(VictoryUiModel.TitleUpdated(title))
-  }
-
-  @Test
-  fun setVictoryTitleNeverReturnsCount() {
-    viewModel.setVictoryTitle("New title")
-
-    verify(viewStateObserver, never()).onChanged(VictoryUiModel.CountUpdated(any()))
   }
 
   @Test
