@@ -52,9 +52,6 @@ class VictoryViewModel : ViewModel() {
   }
 
   fun incrementVictoryCount() {
-    val newCount = repository.getVictoryCount() + 1
-    repository.setVictoryCount(newCount)
-    viewState.setValue(VictoryUiModel.CountUpdated(newCount))
   }
 
   fun reset() {
