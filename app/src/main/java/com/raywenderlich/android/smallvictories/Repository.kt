@@ -42,6 +42,10 @@ open class Repository(context: Context) : VictoryRepository {
 
   private val sharedPreferences = context.getSharedPreferences(PACKAGE_NAME, Context.MODE_PRIVATE)
 
+  override fun getVictoryTitleAndCount(): Pair<String, Int> {
+    return Pair(getVictoryTitle(), getVictoryCount())
+  }
+
   override fun setVictoryTitle(title: String) {
     sharedPreferences.edit().putString(KEY_VICTORY_TITLE, title).apply()
   }
