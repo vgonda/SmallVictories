@@ -2,9 +2,7 @@ package com.raywenderlich.android.smallvictories
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -57,14 +55,25 @@ class VictoryViewModelTest {
   }
 
   @Test
-  fun initializeReturnsViewModel() {
+  fun initializeReturnsTitle() {
     val title = "New title"
     val count = 5
     stubVictoryRepositoryGetVictoryTitle(title)
     stubVictoryRepositoryGetVictoryCount(count)
     viewModel.initialize()
 
-    verify(viewStateObserver).onChanged(VictoryUiModel(title, count))
+    verify(viewStateObserver).onChanged(VictoryUiModel.TitleUpdated(title))
+  }
+
+  @Test
+  fun initializeReturnsCount() {
+    val title = "New title"
+    val count = 5
+    stubVictoryRepositoryGetVictoryTitle(title)
+    stubVictoryRepositoryGetVictoryCount(count)
+    viewModel.initialize()
+
+    verify(viewStateObserver).onChanged(VictoryUiModel.CountUpdated(count))
   }
 
   @Test
@@ -76,19 +85,23 @@ class VictoryViewModelTest {
   }
 
   @Test
-  fun setVictoryTitleReturnsTitleAndCount() {
-    val count = 4
-    stubVictoryRepositoryGetVictoryCount(count)
+  fun setVictoryTitleReturnsTitle() {
     val title = "New title"
     viewModel.setVictoryTitle(title)
 
-    verify(viewStateObserver).onChanged(VictoryUiModel(title, count))
+    verify(viewStateObserver).onChanged(VictoryUiModel.TitleUpdated(title))
+  }
+
+  @Test
+  fun setVictoryTitleNeverReturnsCount() {
+    viewModel.setVictoryTitle("New title")
+
+    verify(viewStateObserver, never()).onChanged(VictoryUiModel.CountUpdated(any()))
   }
 
   @Test
   fun incrementVictoryCountCallsRepository() {
     stubVictoryRepositoryGetVictoryCount(5)
-    stubVictoryRepositoryGetVictoryTitle("Title")
     viewModel.incrementVictoryCount()
 
     verify(mockVictoryRepository).getVictoryCount()
@@ -98,21 +111,18 @@ class VictoryViewModelTest {
   fun incrementVictoryCountUpdatesCount() {
     val previousCount = 5
     stubVictoryRepositoryGetVictoryCount(previousCount)
-    stubVictoryRepositoryGetVictoryTitle("Title")
     viewModel.incrementVictoryCount()
 
     verify(mockVictoryRepository).setVictoryCount(previousCount + 1)
   }
 
   @Test
-  fun incrementVictoryCountReturnsTitleUpdatedCount() {
+  fun incrementVictoryCountReturnsUpdatedCount() {
     val previousCount = 5
     stubVictoryRepositoryGetVictoryCount(previousCount)
-    val title = "Title"
-    stubVictoryRepositoryGetVictoryTitle(title)
     viewModel.incrementVictoryCount()
 
-    verify(viewStateObserver).onChanged(VictoryUiModel(title, previousCount + 1))
+    verify(viewStateObserver).onChanged(VictoryUiModel.CountUpdated(previousCount + 1))
   }
 
   private fun stubVictoryRepositoryGetVictoryTitle(title: String) {

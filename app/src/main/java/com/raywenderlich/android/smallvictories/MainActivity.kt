@@ -77,11 +77,14 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun render(uiModel: VictoryUiModel) {
-    if (!uiModel.title.isBlank()) {
-      textVictoryTitle.text = uiModel.title
+    when (uiModel) {
+      is VictoryUiModel.TitleUpdated -> {
+        textVictoryTitle.text = uiModel.title
+      }
+      is VictoryUiModel.CountUpdated -> {
+        textVictoryCount.text = uiModel.count.toString()
+      }
     }
-
-    textVictoryCount.text = uiModel.count.toString()
   }
 
   @SuppressLint("RestrictedApi")

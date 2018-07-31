@@ -41,18 +41,19 @@ class VictoryViewModel : ViewModel() {
   lateinit var repository: VictoryRepository
 
   fun initialize() {
-    viewState.postValue(VictoryUiModel(repository.getVictoryTitle(), repository.getVictoryCount()))
+    viewState.postValue(VictoryUiModel.TitleUpdated(repository.getVictoryTitle()))
+    viewState.postValue(VictoryUiModel.CountUpdated(repository.getVictoryCount()))
   }
 
   fun setVictoryTitle(title: String) {
     repository.setVictoryTitle(title)
-    viewState.postValue(VictoryUiModel(title, repository.getVictoryCount()))
+    viewState.postValue(VictoryUiModel.TitleUpdated(title))
   }
 
   fun incrementVictoryCount() {
     val newCount = repository.getVictoryCount() + 1
     repository.setVictoryCount(newCount)
-    viewState.postValue(VictoryUiModel(repository.getVictoryTitle(), newCount))
+    viewState.postValue(VictoryUiModel.CountUpdated(newCount))
   }
 }
 
