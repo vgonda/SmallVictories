@@ -56,5 +56,9 @@ class VictoryViewModel : ViewModel() {
     repository.setVictoryCount(newCount)
     viewState.postValue(VictoryUiModel.CountUpdated(newCount))
   }
+
+  fun reset() {
+    // TODO reset existing victory title and count
+  }
 }
 

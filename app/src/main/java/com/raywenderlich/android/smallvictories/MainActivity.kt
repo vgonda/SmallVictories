@@ -71,7 +71,10 @@ class MainActivity : AppCompatActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
-      R.id.action_settings -> true
+      R.id.action_reset -> {
+        // TODO reset existing victory title and count
+        true
+      }
       else -> super.onOptionsItemSelected(item)
     }
   }

@@ -61,4 +61,8 @@ open class Repository(context: Context) : VictoryRepository {
   override fun getVictoryCount(): Int {
     return sharedPreferences.getInt(KEY_VICTORY_COUNT, 0)
   }
+
+  override fun clear() {
+    sharedPreferences.edit().clear().apply()
+  }
 }

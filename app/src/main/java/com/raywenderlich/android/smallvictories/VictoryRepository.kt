@@ -36,4 +36,5 @@ interface VictoryRepository {
   fun getVictoryTitle(): String
   fun setVictoryCount(count: Int)
   fun getVictoryCount(): Int
+  fun clear()
 }
