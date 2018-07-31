@@ -61,8 +61,8 @@ class VictoryViewModel : ViewModel() {
     repository.clear()
 
     val (title, count) = repository.getVictoryTitleAndCount()
-    viewState.postValue(VictoryUiModel.TitleUpdated(title))
-    viewState.postValue(VictoryUiModel.CountUpdated(count))
+    viewState.setValue(VictoryUiModel.CountUpdated(count))
+    viewState.setValue(VictoryUiModel.TitleUpdated(title))
   }
 }
 

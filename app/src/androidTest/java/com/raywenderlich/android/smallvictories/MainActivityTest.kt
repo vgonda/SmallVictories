@@ -94,4 +94,22 @@ class MainActivityTest {
     onView(allOf(withId(R.id.textVictoryCount), withText((previousCount + 1).toString())))
         .check(matches(isDisplayed()))
   }
+
+  @Test
+  fun selectingResetResetsCountView() {
+    onView(withId(R.id.action_reset))
+        .perform(click())
+
+    onView(allOf(withId(R.id.textVictoryCount), withText("0")))
+        .check(matches(isDisplayed()))
+  }
+
+  @Test
+  fun selectingResetResetsTitleView() {
+    onView(withId(R.id.action_reset))
+        .perform(click())
+
+    onView(allOf(withId(R.id.textVictoryTitle), withText("Victory title")))
+        .check(matches(isDisplayed()))
+  }
 }
